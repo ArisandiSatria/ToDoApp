@@ -1,7 +1,7 @@
 const { Todo } = require("../models/index");
 
 const todoController = {
-  getAll: async (req, res) => {
+  getAllTodo: async (req, res) => {
     try {
       const { id } = req.user;
 
@@ -14,7 +14,10 @@ const todoController = {
         data: todos,
       });
     } catch (error) {
-      console.log(error);
+      return res.status(500).json({
+        message: "Terjadi kesalahan server!",
+        error,
+      });
     }
   },
   addTodo: async (req, res) => {
@@ -22,6 +25,12 @@ const todoController = {
       const { id } = req.user;
 
       const { name, description } = req.body;
+
+      if (!name || !description) {
+        return res.status(400).json({
+          message: "Tolong isi semua input!",
+        });
+      }
 
       const todo = await Todo.create({
         name,
@@ -35,7 +44,10 @@ const todoController = {
         data: todo,
       });
     } catch (error) {
-      console.log(error);
+      return res.status(500).json({
+        message: "Terjadi kesalahan server!",
+        error,
+      });
     }
   },
   detailTodo: async (req, res) => {
@@ -58,7 +70,10 @@ const todoController = {
         data: todo,
       });
     } catch (error) {
-      console.log(error);
+      return res.status(500).json({
+        message: "Terjadi kesalahan server!",
+        error,
+      });
     }
   },
   editTodo: async (req, res) => {
@@ -90,11 +105,14 @@ const todoController = {
         }
       );
 
-      return res.status(201).json({
+      return res.status(200).json({
         message: "Data berhasil diubah!",
       });
     } catch (error) {
-      console.log(error);
+      return res.status(500).json({
+        message: "Terjadi kesalahan server!",
+        error,
+      });
     }
   },
   deleteTodo: async (req, res) => {
@@ -116,11 +134,14 @@ const todoController = {
         where: { id: idParams },
       });
 
-      return res.status(201).json({
+      return res.status(204).json({
         message: "Data berhasil dihapus!",
       });
     } catch (error) {
-      console.log(error);
+      return res.status(500).json({
+        message: "Terjadi kesalahan server!",
+        error,
+      });
     }
   },
   deleteAllTodo: async (req, res) => {
@@ -131,11 +152,14 @@ const todoController = {
         where: { user_id: id },
       });
 
-      return res.status(201).json({
+      return res.status(204).json({
         message: "Semua data berhasil dihapus!",
       });
     } catch (error) {
-      console.log(error);
+      return res.status(500).json({
+        message: "Terjadi kesalahan server!",
+        error,
+      });
     }
   },
 };

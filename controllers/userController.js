@@ -4,37 +4,18 @@ const validateEmail = require("../helper/validation/emailHelper");
 const { Users } = require("../models/index");
 
 const userController = {
-  getAll: async (req, res, next) => {
+  addUser: async (req, res) => {
     try {
-      const user = req.user;
-
-      if (!user) {
-        return res.status(401).json({
-          message: "User tidak ada!",
-        });
-      }
-
-      const users = await Users.findAll();
-      return res.json({ status: 200, message: "", users });
-    } catch (error) {
-      console.log("error:", error);
-    }
-  },
-  addUser: async (req, res, next) => {
-    try {
-      // const users = await Users.create();
-
-      // get all data body
       const { name, email, password } = req.body;
 
       if (!name || !email || !password) {
-        return res.status(404).json({
+        return res.status(400).json({
           message: "Tolong isi semua input!",
         });
       }
 
       if (!validateEmail(email)) {
-        return res.status(404).json({
+        return res.status(400).json({
           message: "Email tidak valid!",
         });
       }
@@ -44,7 +25,7 @@ const userController = {
       });
 
       if (isUser) {
-        return res.status(404).json({
+        return res.status(409).json({
           message: "Email sudah terdaftar!",
         });
       }
@@ -57,28 +38,30 @@ const userController = {
         password: newPassword,
       });
 
-      console.log(newPassword);
       return res.json({
-        status: 202,
+        status: 200,
         message: "Akun berhasil dibuat",
         data: user,
       });
     } catch (error) {
-      console.log("error:", error);
+      return res.status(500).json({
+        message: "Terjadi kesalahan server!",
+        error,
+      });
     }
   },
-  loginUser: async (req, res, next) => {
+  loginUser: async (req, res) => {
     try {
       const { email, password } = req.body;
 
       if (!email || !password) {
-        return res.status(404).json({
+        return res.status(400).json({
           message: "Tolong isi semua input!",
         });
       }
 
       if (!validateEmail(email)) {
-        return res.status(404).json({
+        return res.status(400).json({
           message: "Email tidak valid!",
         });
       }
@@ -88,7 +71,7 @@ const userController = {
       });
 
       if (!isUser) {
-        return res.status(404).json({
+        return res.status(401).json({
           message: "Akun anda belum terdaftar!",
         });
       }
@@ -99,7 +82,7 @@ const userController = {
       );
 
       if (!comparePassword) {
-        return res.status(404).json({
+        return res.status(401).json({
           message: "Password salah!",
         });
       }
@@ -112,7 +95,12 @@ const userController = {
         message: "Berhasil Login!",
         token,
       });
-    } catch (error) {}
+    } catch (error) {
+      return res.status(500).json({
+        message: "Terjadi kesalahan server!",
+        error,
+      });
+    }
   },
 };
 

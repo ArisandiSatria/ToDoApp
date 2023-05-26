@@ -24,8 +24,9 @@ const authMiddleware = (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(401).json({
+    return res.status(500).json({
       message: "Terjadi kesalahan server!",
+      error,
     });
   }
 };

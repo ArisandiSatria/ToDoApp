@@ -1,4 +1,3 @@
-const getUsers = require("../controllers/userController");
 const todoRouter = require("./todoRoute");
 const userRouter = require("./userRoute");
 
