@@ -386,7 +386,7 @@ By: Arisandi Satria Jeujanan
 ### 8. **Delete Spesific Todo**
 
 - Endpoint: `/todo/:id`
-- Method: `PUT`
+- Method: `DELETE`
 - Auth: YES
 - Body: -
 
